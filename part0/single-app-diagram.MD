@@ -1,4 +1,6 @@
-# Part 1
+# Part 1 
+
+> Problem 0.5
 
 (What happens when loading the page, before any interaction)
 
@@ -35,6 +37,8 @@ sequenceDiagram
 
 # Part 2
 
+>  Problem 0.6
+
 (What happens right after the you click the SAVE button)
 
 ```mermaid
@@ -51,6 +55,5 @@ sequenceDiagram
     deactivate server
 
     Note left of server: The data is sent as a JSON, and not as a Form Data, as it wasn't sent using the <form/>, but the fetch method
-
 
 ```
