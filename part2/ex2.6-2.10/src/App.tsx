@@ -3,7 +3,7 @@ import SearchFilter from "./components/SearchFilter";
 import PeopleList from "./components/PeopleList";
 import AddPersonForm from "./components/AddPersonForm";
 
-type Person = {
+export type Person = {
   name: string;
   number: string;
 };
