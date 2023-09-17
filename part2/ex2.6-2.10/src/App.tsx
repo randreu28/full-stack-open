@@ -11,17 +11,13 @@ export type Person = {
 };
 
 const App = () => {
-  const { people, isLoading, error, personService } = usePersons();
+  const { people, isLoading, error, personService, feedback } = usePersons();
   const [newName, setNewName] = useState<string>("");
   const [newPhone, setNewPhone] = useState<string>("");
   const [filterName, setFilterName] = useState<string>("");
 
   if (isLoading) {
-    return <h1>loadinig</h1>;
-  }
-
-  if (error) {
-    return <h1>error</h1>;
+    return <h1>loading</h1>;
   }
 
   function addPerson(e: React.FormEvent<HTMLFormElement>) {
@@ -52,6 +48,9 @@ const App = () => {
 
   return (
     <div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {feedback && <p style={{ color: "green" }}>{feedback}</p>}
+
       <SearchFilter
         searchTerm={filterName}
         handleSearchChange={handleSearchChange}

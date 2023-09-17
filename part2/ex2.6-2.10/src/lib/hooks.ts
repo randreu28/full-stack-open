@@ -8,6 +8,7 @@ export function usePersons() {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [feedback, setFeedback] = useState<string | undefined>(undefined);
 
   const getPeople = () => {
     setIsLoading(true);
@@ -17,6 +18,9 @@ export function usePersons() {
       .catch((error) => {
         setError("Error getting data. Check the console");
         console.error(error);
+        setTimeout(() => {
+          setError(undefined);
+        }, 5000);
       })
       .finally(() => setIsLoading(false));
   };
@@ -37,6 +41,15 @@ export function usePersons() {
         .catch((e) => {
           setError("Error posting data. Check the console");
           console.error(e);
+          setTimeout(() => {
+            setError(undefined);
+          }, 5000);
+        })
+        .finally(() => {
+          setFeedback("Person posted succesfully");
+          setTimeout(() => {
+            setFeedback(undefined);
+          }, 5000);
         });
     } else if (
       confirm(
@@ -54,6 +67,15 @@ export function usePersons() {
         .catch((e) => {
           setError("Error posting data. Check the console");
           console.error(e);
+          setTimeout(() => {
+            setError(undefined);
+          }, 5000);
+        })
+        .finally(() => {
+          setFeedback("Person updated succesfully");
+          setTimeout(() => {
+            setFeedback(undefined);
+          }, 5000);
         });
     }
     setIsLoading(false);
@@ -63,10 +85,19 @@ export function usePersons() {
     setIsLoading(true);
     axios
       .delete(endpoint + id)
-      .then(() => setPeople(people.filter((person) => person.id !== id)))
+      .then(() => {
+        setPeople(people.filter((person) => person.id !== id));
+        setFeedback("Person deleted succesfully");
+        setTimeout(() => {
+          setFeedback(undefined);
+        }, 5000);
+      })
       .catch((e) => {
         setError("Error posting data. Check the console");
         console.error(e);
+        setTimeout(() => {
+          setError(undefined);
+        }, 5000);
       })
       .finally(() => setIsLoading(false));
   };
@@ -79,6 +110,7 @@ export function usePersons() {
     people,
     isLoading,
     error,
+    feedback,
     personService: { getPersons: getPeople, addPerson, deletePerson },
   };
 }
