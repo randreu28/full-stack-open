@@ -1,29 +1,37 @@
 import { useState } from "react";
-import SearchFilter from "./components/SearchFilter";
-import PeopleList from "./components/PeopleList";
 import AddPersonForm from "./components/AddPersonForm";
+import PeopleList from "./components/PeopleList";
+import SearchFilter from "./components/SearchFilter";
+import { usePersons } from "./lib/hooks";
 
 export type Person = {
   name: string;
   number: string;
+  id?: number;
 };
 
 const App = () => {
-  const [persons, setPersons] = useState<Person[]>([
-    { name: "John Doe", number: "+1 234 567 890" },
-    { name: "Jane Doe", number: "+1 987 654 321" },
-    { name: "Foo Bar", number: "+1 123 456 789" },
-    { name: "Baz Quux", number: "+1 987 654 321" },
-  ]);
+  const { people, isLoading, error, personService } = usePersons();
   const [newName, setNewName] = useState<string>("");
   const [newPhone, setNewPhone] = useState<string>("");
   const [filterName, setFilterName] = useState<string>("");
 
+  if (isLoading) {
+    return <h1>loadinig</h1>;
+  }
+
+  if (error) {
+    return <h1>error</h1>;
+  }
+
   function addPerson(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setPersons([...persons, { name: newName, number: newPhone }]);
-    setNewName("");
-    setNewPhone("");
+
+    if (newName && newPhone) {
+      personService.addPerson({ name: newName, number: newPhone });
+      setNewName("");
+      setNewPhone("");
+    }
   }
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +46,7 @@ const App = () => {
     setFilterName(event.target.value);
   };
 
-  const filteredPersons = persons.filter((person) =>
+  const filteredPeople = people.filter((person) =>
     person.name.toLowerCase().includes(filterName.toLowerCase())
   );
 
@@ -54,7 +62,10 @@ const App = () => {
         handleNumberChange={handleNumberChange}
         handleSubmit={addPerson}
       />
-      <PeopleList people={filteredPersons} />
+      <PeopleList
+        people={filteredPeople}
+        handleDelete={personService.deletePerson}
+      />
     </div>
   );
 };

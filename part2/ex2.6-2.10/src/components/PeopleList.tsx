@@ -1,13 +1,19 @@
+import { Person } from "../App";
+
 type Props = {
-  people: { name: string; number: string }[];
+  people: Person[];
+  handleDelete: (id: number) => void;
 };
 
-export default function PeopleList({ people }: Props) {
+export default function PeopleList({ people, handleDelete }: Props) {
   return (
     <ul>
       {people.map((person) => (
         <li key={person.name}>
-          {person.name} {person.number}
+          <p>
+            {person.name} {person.number}
+          </p>
+          <button onClick={() => handleDelete(person.id!)}>delete</button>
         </li>
       ))}
     </ul>

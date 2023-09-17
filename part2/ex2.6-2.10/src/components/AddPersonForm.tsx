@@ -1,5 +1,7 @@
+import { Person } from "../App";
+
 type Props = {
-  newPerson: { name: string; number: string };
+  newPerson: Person;
   handleNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleNumberChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
