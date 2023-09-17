@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import type { Person } from "../App";
 
+const endpoint = "http://localhost:3001/persons/";
+
 export function usePersons() {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -10,7 +12,7 @@ export function usePersons() {
   const getPeople = () => {
     setIsLoading(true);
     axios
-      .get<Person[]>("http://localhost:3001/persons")
+      .get<Person[]>(endpoint)
       .then(({ data }) => setPeople(data))
       .catch((error) => {
         setError("Error getting data. Check the console");
@@ -21,20 +23,46 @@ export function usePersons() {
 
   const addPerson = (person: Person) => {
     setIsLoading(true);
-    axios
-      .post<Person>("http://localhost:3001/persons", person)
-      .then(({ data }) => setPeople([...people, data]))
-      .catch((e) => {
-        setError("Error posting data. Check the console");
-        console.error(e);
-      })
-      .finally(() => setIsLoading(false));
+
+    const alreadyRegisteredPeople = people.filter(
+      (registeredPerson) => registeredPerson.name === person.name
+    );
+
+    const isAlreadyRegistered = alreadyRegisteredPeople.length > 0;
+
+    if (!isAlreadyRegistered) {
+      axios
+        .post<Person>(endpoint, person)
+        .then(({ data }) => setPeople([...people, data]))
+        .catch((e) => {
+          setError("Error posting data. Check the console");
+          console.error(e);
+        });
+    } else if (
+      confirm(
+        `${person.name} is already added to phonebook, replace the old number with a new one?`
+      )
+    ) {
+      axios
+        .put<Person>(endpoint + alreadyRegisteredPeople[0].id, person)
+        .then(({ data: newPerson }) => {
+          const updatedPeople = people.map((p) =>
+            p.id === newPerson.id ? newPerson : p
+          );
+          setPeople(updatedPeople);
+        })
+        .catch((e) => {
+          setError("Error posting data. Check the console");
+          console.error(e);
+        });
+    }
+    setIsLoading(false);
   };
 
   const deletePerson = (id: number) => {
     setIsLoading(true);
     axios
-      .delete("http://localhost:3001/persons/" + id)
+      .delete(endpoint + id)
       .then(() => setPeople(people.filter((person) => person.id !== id)))
       .catch((e) => {
         setError("Error posting data. Check the console");
