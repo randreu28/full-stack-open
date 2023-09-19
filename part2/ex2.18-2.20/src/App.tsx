@@ -1,7 +1,10 @@
+import { useState } from "react";
 import useCountries from "./hooks/useCountries";
+import CountryList from "./components/CountryList";
 
 export default function App() {
   const countriesService = useCountries();
+  const [filter, setFilter] = useState<string>("");
 
   if (countriesService.isLoading) {
     return <p>Loading...</p>;
@@ -11,11 +14,19 @@ export default function App() {
     return <p style={{ color: "red" }}>{countriesService.error}</p>;
   }
 
+  const filteredCountries = countriesService.countries.filter((country) =>
+    country.name.common.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
     <div>
-      {countriesService.countries.map((country) => (
-        <p>{country.name.common}</p>
-      ))}
+      <div>
+        <p>find countries</p>
+        <input value={filter} onChange={(e) => setFilter(e.target.value)} />
+      </div>
+      <ul>
+        <CountryList countries={filteredCountries} />
+      </ul>
     </div>
   );
 }

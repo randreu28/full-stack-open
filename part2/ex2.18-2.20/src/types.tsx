@@ -3,7 +3,7 @@
     https://www.thunderclient.com/
 */
 
-export interface Country {
+export interface CountryType {
   name: Name;
   tld?: string[];
   cca2: string;
