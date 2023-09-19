@@ -1,4 +1,5 @@
 import { CountryType } from "../types";
+import Weather from "./Weather";
 
 type Props = {
   country: CountryType;
@@ -28,6 +29,8 @@ export default function Country({ country }: Props) {
 
         <br />
         <img src={country.flags.png} />
+
+        <Weather lat={country.latlng[0]} long={country.latlng[1]} />
       </div>
     </div>
   );
