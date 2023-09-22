@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import type { Person } from "../App";
 
-const endpoint = "http://localhost:3001/persons/";
+const endpoint = "http://localhost:3001/api/persons/";
 
 export function usePersons() {
   const [people, setPeople] = useState<Person[]>([]);
